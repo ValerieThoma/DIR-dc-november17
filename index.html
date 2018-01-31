@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- jsx returns descriptions of dom elements -->
+    <meta charset="UTF-8" />
+    <title>Hello World</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+      const catName = "oakley";
+      const catPerson = {
+        name: "Chris",
+        age: 1000,
+        hasMohawk: true
+      };
+
+      const cats = [
+        {
+          name: "whisper",
+          type: "fat tabby",
+          gender: "male"
+        },
+        {
+          name: "neo",
+          type: "grey"
+        },
+        {
+          name: "oakley",
+          type: "black"
+        },
+        {
+          name: "milla",
+          type: "tortoise"
+        }
+      ];
+
+      const Greet = (props) => {
+
+        let g = '';
+        if (props.gender) {
+          g = (<span>You are {props.gender}</span>);
+        }
+
+        return (
+          <div>
+            <h1>{props.salutation}, {props.name}!</h1>
+            <p>You are a {props.type} kitty.</p>
+            {g}
+          </div>
+        );
+      };
+
+      const greetedCats = cats.map( cat => {
+        return (<Greet
+          name={cat.name}
+          type={cat.type}
+          gender={cat.gender}
+          salutation="S'up"
+        />);
+      });
+      const renderUI = () =>{
+        const currentDateStamp = (new Date()).getTime();
+      }
+      ReactDOM.render(
+        <div className="container">
+        {greetedCats}
+        </div>,
+        document.getElementById('root')
+      );
+
+      setInterval(renderUI, 1000);
+    </script>
+  </body>
+</html>
