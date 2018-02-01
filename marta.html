@@ -6,23 +6,102 @@
     <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+      .red{color:red;}
+      .gold{color:gold;}
+      .green{color:green;}
+      .blue{color:blue;}
+    </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="text/babel">
+  
 
     const MARTA_URL = "http://marta-api.herokuapp.com/arrivals"
 
     fetch(MARTA_URL)
         .then(resp => resp.json())
         .then(martaData =>{
-            console.log(martaData);
-        })
-
-      ReactDOM.render(
-        <h1>Hello, Marta!</h1>,
-        document.getElementById('root')
+            // console.log(martaData);
+            ReactDOM.render(
+              <App data={martaData}
+              username=""
+              thing=""/>, 
+              document.getElementById('root')
       );
+
+        })
+    const TrainInfo = (props) =>{
+      return(
+            <div className="train-info-card">
+            <h3 className="train-station">{props.station}</h3>
+            <p>{props.direction}</p>
+            <p className={props.line}>{props.line}</p>
+            <p>{props.destination}</p>
+            <p>{props.trainid}</p>
+            </div>
+          );
+    }
+    const TrainList = (props) =>{
+
+      const trainInfoArray = props.data
+                                  .filter(t => t.train_id)
+                                  .map((d, i) =>{
+                                    return (<TrainInfo
+                                              key={i}
+                                              direction={d.direction}
+                                              line={d.line}
+                                              station={d.station}
+                                              destination={d.destination}
+                                              trainid={d.train_id}
+                                              />);
+                                          });
+      return (
+              <div className="train-list">
+                <h2>Upcoming Trains</h2>
+                {trainInfoArray}
+              </div>
+            )     
+    }
+
+    const LineCheckBox = (props) =>{
+      return(
+        <div>
+          <input name="line" type="radio" onClick={() => props.handleClick(props.line) } />
+          {props.line}
+        </div>  
+      )
+    }
+
+    class App extends React.Component{
+      constructor(props){
+        super(props);
+        this.state ={
+          line: "blue"
+        };
+      }
+      render() {
+        console.log(this.state.line);
+        return (<div className="train-app">
+                  <h1>Get on the Marta (It's Smarta)</h1>
+                  <LineCheckBox line="red" handleClick={this._setLineColor} />
+                  <LineCheckBox line="blue" handleClick={this._setLineColor} />
+                  <LineCheckBox line="green" handleClick={this._setLineColor} />
+                  <LineCheckBox line="gold" handleClick={this._setLineColor} />
+                  <TrainList data={this.props.data} line={this.state.line} />
+                </div>);
+      }
+
+      _setLineColor = (color) => {
+        console.log(color);
+        this.setState({
+          line: color
+        });
+      }
+
+    }
+
 
     </script>
     <!--
